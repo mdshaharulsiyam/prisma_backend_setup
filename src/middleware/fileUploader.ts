@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from "express";
 import fs from "fs";
 import multer, { StorageEngine } from "multer";
 import path from "path";
@@ -12,13 +13,13 @@ export const UnlinkFiles = (files: string[]) => {
   });
 };
 
-const ensureDirectoryExists = (directory: string) => {
+const ensureDirectoryExists = async (directory: string) => {
   if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory, { recursive: true });
   }
 };
 
-const setFilePermissions = (filePath: string) => {
+const setFilePermissions = async (filePath: string) => {
   try {
     fs.chmodSync(filePath, 0o777);
   } catch (err) {
@@ -26,13 +27,13 @@ const setFilePermissions = (filePath: string) => {
   }
 };
 
-const uploadFile = () => {
-  setFilePermissions(path.join("uploads"));
+const uploadFile = async () => {
+  await setFilePermissions(path.join("uploads"));
   const storage: StorageEngine = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: async (req, file, cb) => {
       try {
         const uploadPath = path.join("uploads", file.fieldname);
-        ensureDirectoryExists(uploadPath);
+        await ensureDirectoryExists(uploadPath);
         if (
           file.mimetype.startsWith("image/") ||
           file.mimetype.startsWith("video/")
@@ -45,19 +46,19 @@ const uploadFile = () => {
         cb(error as Error, "");
       }
     },
-    filename: function (req, file, cb) {
+    filename: async (req, file, cb) => {
       const name = Date.now() + "-" + file.originalname;
       const filePath = path.join("uploads", file.fieldname, name);
-      ensureDirectoryExists(path.dirname(filePath));
+      await ensureDirectoryExists(path.dirname(filePath));
       // setFilePermissions(path.join('uploads'));
       cb(null, name);
     },
   });
 
-  const fileFilter = (
-    req: any,
-    file: any,
-    cb: any,
+  const fileFilter = async (
+    req: Request,
+    file: Express.Multer.File,
+    cb: multer.FileFilterCallback,
   ) => {
     const allowedFilenames = [
       "img",
@@ -95,14 +96,14 @@ const uploadFile = () => {
     { name: "banner", maxCount: 1 },
   ]);
 
-  return (req: any, res: any, next: any) => {
-    upload(req, res, async function (err: any) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    upload(req, res, async function (err) {
       if (err) {
         return res.status(400).send({ success: false, message: err.message });
       }
 
       // Type assertion to handle the 'video' field properly
-      const files = req.files as { [key: string]: multer.File[] }; //  { [fieldname: string]: Express.Multer.File[] };
+      const files = req.files as { [key: string]: Express.Multer.File[] }; //  { [fieldname: string]: Express.Multer.File[] };
 
       // Video size validation (if necessary)
       if (files?.video) {

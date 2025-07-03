@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import globalErrorHandler from '../utils/globalErrorHandler';
 import { UnlinkFiles } from "./fileUploader";
 
 const asyncWrapper = (
@@ -9,8 +10,7 @@ const asyncWrapper = (
       if (req.body?.all_images?.length > 0) {
         UnlinkFiles(req.body?.all_images);
       }
-      // globalErrorHandler(error, req, res, next);
-      console.log(error);
+      globalErrorHandler(error, req, res, next);
     });
   };
 };

@@ -130,6 +130,7 @@ class MailService {
     };
     return this.sendMail(mailOptions);
   }
+
 }
 
 export const sendMail = {
