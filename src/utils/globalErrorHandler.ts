@@ -18,8 +18,9 @@ export class CustomError extends Error {
 
 // Handle Zod schema validation errors
 const handleZodError = (err: ZodError): CustomError => {
-  const message = err.errors.map(e => `${e.path.join('.')} ${e.message}`).join(', ');
-  return new CustomError(`Validation Error: ${message}`, 400);
+  // const message = err.errors.map(e => `${e.message}`).join(', ');
+  const message = err?.errors?.[0]?.message;
+  return new CustomError(`${message}`, 400);
 };
 
 // Prisma error: unique constraint failed
