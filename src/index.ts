@@ -1,11 +1,13 @@
 import express from "express";
 import authRoute from "./apis/auth/auth_route";
+import categoryRouter from './apis/category/category_route';
 import globalErrorHandler from './utils/globalErrorHandler';
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(authRoute);
+app.use(categoryRouter);
 app.get("/", (req, res) => {
   res.send("Hello Prisma!");
 });

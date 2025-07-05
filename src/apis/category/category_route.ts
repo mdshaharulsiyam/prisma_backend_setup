@@ -2,13 +2,13 @@ import express from 'express';
 import asyncWrapper from '../../middleware/asyncWrapper';
 import validateRequest from '../../middleware/validateRequest';
 import auth_controller from './category_controller';
-import auth_validate from './category_validate';
+import category_validate from './category_validate';
 
 const categoryRouter = express.Router();
 
 categoryRouter.post(
   '/category/sign-up',
-  validateRequest(auth_validate.userRegisterSchema),
+  validateRequest(category_validate.categorySchema),
   asyncWrapper(auth_controller.register)
 )
 
