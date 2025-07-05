@@ -1,16 +1,14 @@
-import { PrismaClient, Users } from '../../../generated/prisma';
-import hashText from '../../utils/hashText';
+import { Categories, PrismaClient } from '../../../generated/prisma';
 const prisma = new PrismaClient();
-const register = async (data: Users): Promise<{ user: Users | null, message: string, error?: any }> => {
-  const hasPassword = await hashText(data.password);
-  const user = await prisma.users.create({ data: { ...data, password: hasPassword } });
-  return { user, message: 'User created successfully' };
+const create_category = async (data: Categories): Promise<{ category: Categories | null, message: string, error?: any }> => {
+  const category = await prisma.categories.create({ data: { ...data } });
+  return { category, message: 'Category created successfully' };
 }
-const get_all_users = async (): Promise<{ users: Users[] | null, message: string, error?: any }> => {
-  const users = await prisma.users.findMany();
-  return { users, message: 'Users fetched successfully' };
+const get_all_categories = async (): Promise<{ categories: Categories[] | null, message: string, error?: any }> => {
+  const categories = await prisma.categories.findMany();
+  return { categories, message: 'Categories fetched successfully' };
 }
 export default {
-  register,
-  get_all_users
+  create_category,
+  get_all_categories
 }
