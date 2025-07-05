@@ -5,5 +5,16 @@ import auth_controller from './auth_controller';
 import auth_validate from './auth_validate';
 
 const authRouter = express.Router();
-authRouter.post('/auth/sign-up', validateRequest(auth_validate.userRegisterSchema), asyncWrapper(auth_controller.register));
+
+authRouter.post(
+  '/auth/sign-up',
+  validateRequest(auth_validate.userRegisterSchema),
+  asyncWrapper(auth_controller.register)
+)
+
+  .get(
+    '/auth/get-all',
+    asyncWrapper(auth_controller.get_all_users)
+  );
+
 export default authRouter;
