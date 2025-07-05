@@ -1,6 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 
 // Assuming you have initialized PrismaClient somewhere or it's globally available
+
+import { PrismaClient } from '../../generated/prisma';
+
 // If not, you'll need to pass an instance to prismaAggregator when not using rawSQLQuery
 const prisma = new PrismaClient();
 
