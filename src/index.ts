@@ -10,6 +10,7 @@ app.get("/", (req, res) => {
   res.send("Hello Prisma!");
 });
 app.use(globalErrorHandler);
+
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server is running on port 3000");
 });
