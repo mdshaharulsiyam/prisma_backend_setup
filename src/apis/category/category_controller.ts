@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
-import auth_service from './category_service';
+import category_service from './category_service';
 
-const register = async (req: Request, res: Response) => {
-  const data = await auth_service.register(req.body);
+const create_category = async (req: Request, res: Response) => {
+  const data = await category_service.create_category(req.body);
   res.status(200).json(data);
 }
-const get_all_users = async (req: Request, res: Response) => {
-  const data = await auth_service.get_all_users();
+const get_all_categories = async (req: Request, res: Response) => {
+  const data = await category_service.get_all_categories();
   res.status(200).json(data);
 }
 export default {
-  register,
-  get_all_users
+  create_category,
+  get_all_categories
 }

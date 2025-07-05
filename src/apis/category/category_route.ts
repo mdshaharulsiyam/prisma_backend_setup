@@ -1,20 +1,20 @@
 import express from 'express';
 import asyncWrapper from '../../middleware/asyncWrapper';
 import validateRequest from '../../middleware/validateRequest';
-import auth_controller from './category_controller';
+import category_controller from './category_controller';
 import category_validate from './category_validate';
 
 const categoryRouter = express.Router();
 
 categoryRouter.post(
-  '/category/sign-up',
+  '/category/create',
   validateRequest(category_validate.categorySchema),
-  asyncWrapper(auth_controller.register)
+  asyncWrapper(category_controller.create_category)
 )
 
   .get(
     '/category/get-all',
-    asyncWrapper(auth_controller.get_all_users)
+    asyncWrapper(category_controller.get_all_categories)
   );
 
 export default categoryRouter;
