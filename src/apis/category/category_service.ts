@@ -1,5 +1,5 @@
 import { Categories, PrismaClient } from '../../../generated/prisma';
-import { prismaAggregator, QueryKeys, SearchKeys } from '../../utils/prismaAggregator';
+import { Pagination, prismaAggregator, QueryKeys, SearchKeys } from '../../utils/prismaAggregator';
 const prisma = new PrismaClient();
 const create_category = async (data: Categories): Promise<{ category: Categories | null, message: string, error?: any }> => {
   const category = await prisma.categories.create({ data: { ...data } });
@@ -8,6 +8,7 @@ const create_category = async (data: Categories): Promise<{ category: Categories
 const get_all_categories = async (queryKeys: QueryKeys, searchKeys: SearchKeys): Promise<{
   categories: Categories[] | null;
   message: string;
+  pagination?: Pagination;
   error?: any;
 }> => {
   try {
@@ -30,6 +31,7 @@ const get_all_categories = async (queryKeys: QueryKeys, searchKeys: SearchKeys):
     return {
       categories: result.data,
       message: "Categories fetched successfully",
+      pagination: result.pagination,
     };
   } catch (error) {
     return {

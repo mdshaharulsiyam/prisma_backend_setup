@@ -20,7 +20,7 @@ export interface SearchKeys {
   [key: string]: string;
 }
 
-interface Pagination {
+export interface Pagination {
   currentPage: number;
   itemsPerPage: number;
   totalItems: number;
@@ -40,11 +40,11 @@ export const prismaAggregator = async <T>(
   },
   queryKeys: QueryKeys,
   searchKeys: SearchKeys = {},
-  searchableFields: (keyof T)[] = [], // This is the parameter in question
+  searchableFields: (keyof T)[] = [],
   whereExtra: Record<string, any> = {},
   include?: Record<string, any>,
   rawSQLQuery?: string,
-  prismaClient?: PrismaClient // NEW PARAM
+  prismaClient?: PrismaClient
 ): Promise<ResponseData<T>> => {
   const {
     limit = "10",
@@ -63,7 +63,6 @@ export const prismaAggregator = async <T>(
   const currentPage = parseInt(page, 10);
   const offset = (currentPage - 1) * itemsPerPage;
 
-  // ✅ If raw SQL is passed
   if (rawSQLQuery) {
     if (!prismaClient) {
       throw new Error("prismaClient must be provided when rawSQLQuery is used.");
