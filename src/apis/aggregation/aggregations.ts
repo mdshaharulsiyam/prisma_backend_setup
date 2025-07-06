@@ -93,27 +93,19 @@ aggregateRouter.get('/aggregations/5', asyncWrapper(
   }
 ));
 // 6
-aggregateRouter.get('/aggregations/5', asyncWrapper(
+aggregateRouter.get('/aggregations/6', asyncWrapper(
   async (req, res) => {
-    const data: any = await prisma.posts.findMany({
-      select: {
-        title: true,
-        likes: {
-          select: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true
-              }
-            }
-          }
-        },
-        _count: {
-          select: {
-            likes: true
-          }
+    const data: any = await prisma.users.findMany({
+      where: {
+        posts: {
+          none: {}
+          // some: { category_id: 1 }
         }
+      }, select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true
       }
     })
     res.status(200).json(data);
