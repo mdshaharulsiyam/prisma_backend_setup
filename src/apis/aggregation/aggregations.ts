@@ -168,6 +168,55 @@ aggregateRouter.get('/aggregations/12', asyncWrapper(
     res.status(200).json(data);
   }
 ));
+// 13
+aggregateRouter.get('/aggregations/13', asyncWrapper(
+  async (req, res) => {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+    const data: any = await prisma.posts.findMany({
+      where: {
+        createdAt: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        desc: true,
+        category: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        comments: {
+          select: {
+            id: true,
+            text: true,
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+
+            }
+          }
+        },
+      }
+    })
+    res.status(200).json(data);
+  }
+));
+// 13
+aggregateRouter.get('/aggregations/14', asyncWrapper(
+  async (req, res) => {
+
+    const data: any = await prisma.$queryRaw`SELECT COUNT(*)::INT ,post_id  FROM "Likes" GROUP BY post_id;`
+    res.status(200).json(data);
+  }
+));
 
 
 
