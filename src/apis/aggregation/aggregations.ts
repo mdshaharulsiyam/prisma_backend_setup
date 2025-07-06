@@ -159,6 +159,15 @@ aggregateRouter.get('/aggregations/11', asyncWrapper(
     res.status(200).json(data);
   }
 ));
+// 12
+aggregateRouter.get('/aggregations/12', asyncWrapper(
+  async (req, res) => {
+    const data: any = await prisma.$queryRaw`
+    SELECT  FROM users u INNER JOIN Comments 
+    `
+    res.status(200).json(data);
+  }
+));
 
 
 
