@@ -70,7 +70,10 @@ const handleDevError = (res: Response, error: any): void => {
     // stack: error.stack,
   });
 };
-
+const relationError = (error: any): CustomError => {
+  const message = error?.meta?.message
+  return new CustomError(message, 400);
+}
 const globalErrorHandler = (
   error: any,
   req: Request,
@@ -87,6 +90,10 @@ const globalErrorHandler = (
     console.log(error)
     if (error instanceof ZodError) {
       error = handleZodError(error);
+    }
+
+    if (error.code === 'P2010') {
+      error = relationError(error);
     }
 
     if (error.code === 'P2002') {
@@ -107,6 +114,10 @@ const globalErrorHandler = (
   else if (process.env.NODE_ENV === 'production') {
     if (error instanceof ZodError) {
       error = handleZodError(error);
+    }
+
+    if (error.code === 'P2010') {
+      error = relationError(error);
     }
 
     if (error.code === 'P2002') {
