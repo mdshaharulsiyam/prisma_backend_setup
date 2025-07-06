@@ -11,7 +11,11 @@ authRouter.post(
   validateRequest(auth_validate.userRegisterSchema),
   asyncWrapper(auth_controller.register)
 )
-
+  .post(
+    '/auth/sign-in',
+    validateRequest(auth_validate.userLoginSchema),
+    asyncWrapper(auth_controller.login)
+  )
   .get(
     '/auth/get-all',
     asyncWrapper(auth_controller.get_all_users)
