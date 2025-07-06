@@ -13,7 +13,7 @@ authRouter.post(
 )
   .post(
     '/auth/sign-in',
-    validateRequest(auth_validate.userLoginSchema),
+    validateRequest(auth_validate.loginSchema),
     asyncWrapper(auth_controller.login)
   )
   .get(
