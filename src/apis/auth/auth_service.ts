@@ -18,6 +18,7 @@ const get_all_users = async (): Promise<{ users: Users[] | null, message: string
 const login = async (data: Users): Promise<{ data: Users | null, message: string, token?: string, error?: any }> => {
   const user = await prisma.users.findUnique({ where: { email: data.email } });
 
+
   if (!user) {
     return { data: null, message: 'invalid email or password' };
   }
@@ -28,8 +29,8 @@ const login = async (data: Users): Promise<{ data: Users | null, message: string
     return { data: null, message: 'invalid email or password' };
   }
 
-  const token = await generateToken({ id: user.id, email: user.email });
-  return { data: data, message: 'User logged in successfully', token };
+  const token = await generateToken({ id: user.id, email: user.email, role: user.role });
+  return { message: 'User logged in successfully', data: user, token };
 }
 
 export default {
