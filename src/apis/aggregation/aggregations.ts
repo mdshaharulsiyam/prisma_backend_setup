@@ -163,7 +163,7 @@ aggregateRouter.get('/aggregations/11', asyncWrapper(
 aggregateRouter.get('/aggregations/12', asyncWrapper(
   async (req, res) => {
     const data: any = await prisma.$queryRaw`
-    SELECT  FROM users u INNER JOIN Comments 
+    SELECT u.name AS user_name, COUNT(c.id)::INT AS total_comments FROM "Users" u INNER JOIN "Comments" c ON u.id = c.user_id GROUP BY u.id ORDER BY total_comments DESC LIMIT 3 OFFSET 0;
     `
     res.status(200).json(data);
   }
