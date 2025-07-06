@@ -55,7 +55,6 @@ const handleProdError = (res: Response, error: any): void => {
       message: error.message,
     });
   } else {
-    console.error('ERROR 💥:', error);
     res.status(500).send({
       success: false,
       message: 'Something went wrong! Please try again later.',
@@ -67,8 +66,8 @@ const handleDevError = (res: Response, error: any): void => {
   res.status(error.statusCode || 500).send({
     success: false,
     message: error.message,
-    error: error,
-    stack: error.stack,
+    // error: error,
+    // stack: error.stack,
   });
 };
 
