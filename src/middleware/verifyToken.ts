@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client';
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { PrismaClient } from '../../generated/prisma';
 import config, { HttpStatus } from '../config/config';
 
 const prisma = new PrismaClient();
@@ -21,12 +21,10 @@ const verifyToken = (
     next: NextFunction,
   ): Promise<void> => {
     try {
-      let tokenWithBearer = req.headers.authorization || req.cookies[type];
-
+      let tokenWithBearer = req?.headers?.authorization || req?.cookies?.[type];
       if (!tokenWithBearer && !privet) {
         return next();
       }
-
       if (!tokenWithBearer) {
         res.status(403).send({ success: false, message: "Forbidden access" });
         return;
@@ -51,17 +49,16 @@ const verifyToken = (
           }
 
           const decodedToken = decoded as DecodedToken;
-
+          console.log({ decodedToken })
           if (type == config.ACCESS_TOKEN_NAME) {
             const [user, extra] = await Promise.all([
-              prisma.user.findUnique({
+              prisma.users.findUnique({
                 where: {
-                  email: decodedToken?.email,
+                  email: decodedToken?.data?.email,
                 },
               }),
               fn ? fn(req) : {},
             ]);
-            // console.log(user)
             if (user && user?.accessToken == token) {
               req.user = user;
               req.extra = extra;
@@ -75,9 +72,9 @@ const verifyToken = (
           }
 
           const [user, extra] = await Promise.all([
-            prisma.user.findUnique({
+            prisma.users.findUnique({
               where: {
-                id: decodedToken.id,
+                email: decodedToken?.data?.email,
               },
             }),
             fn ? fn(req) : {},
@@ -112,7 +109,7 @@ const verifyToken = (
             });
             return;
           }
-          req.user = user.toObject();
+          req.user = user;
           req.extra = extra;
           next();
         },

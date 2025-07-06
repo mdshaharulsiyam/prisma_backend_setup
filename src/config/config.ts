@@ -10,7 +10,7 @@ export default Object.freeze({
   ],
   MAIL_PASSWORD: process.env.MAIL_PASSWORD,
   MAIL_EMAIL: process.env.MAIL_EMAIL,
-  ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
+  ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || "token_secret",
   DATABASE_URL: process.env.DATABASE_URL,
   NODE_ENV: process.env.NODE_ENV,
   SRTRIPE_KEY: process.env.SRTRIPE_KEY || "",

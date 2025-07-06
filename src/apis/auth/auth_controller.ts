@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { HttpStatus } from '../../config/config';
+import config, { HttpStatus } from '../../config/config';
 import { sendResponse } from '../../utils/sendResponse';
 import auth_service from './auth_service';
 
@@ -15,7 +15,7 @@ const get_all_users = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const data = await auth_service.login(req.body);
-  sendResponse(res, HttpStatus.SUCCESS, data);
+  sendResponse(res, HttpStatus.SUCCESS, data, [config.ACCESS_TOKEN_NAME, data.token || "", 60 * 60 * 24 * 1000]);
 }
 
 export default {

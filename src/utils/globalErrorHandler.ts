@@ -82,9 +82,9 @@ const globalErrorHandler = (
   error.status = error.status || 'error';
   const message = error?.message?.split('})')[1]
   // console.log(message)
-  console.log(error)
   // 🔍 Development Mode
   if (process.env.NODE_ENV === 'development') {
+    console.log(error)
     if (error instanceof ZodError) {
       error = handleZodError(error);
     }
