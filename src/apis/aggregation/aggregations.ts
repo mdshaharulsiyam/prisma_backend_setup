@@ -111,6 +111,54 @@ aggregateRouter.get('/aggregations/6', asyncWrapper(
     res.status(200).json(data);
   }
 ));
+// 7
+aggregateRouter.get('/aggregations/7', asyncWrapper(
+  async (req, res) => {
+    const date = new Date(Date.now() - 10 * 60 * 60 * 1000);
+    const data: any = await prisma.posts.findMany({
+      where: {
+        createdAt: {
+          gte: date
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      skip: 0,
+      take: 4
+    })
+    res.status(200).json(data);
+  }
+));
+// 8
+aggregateRouter.get('/aggregations/8', asyncWrapper(
+  async (req, res) => {
+    const data: any = await prisma.users.count({
+      where: {
+        block: true
+      }
+    })
+    res.status(200).json(data);
+  }
+));
+// 11
+aggregateRouter.get('/aggregations/11', asyncWrapper(
+  async (req, res) => {
+    const data: any = await prisma.categories.findMany({
+      select: {
+        name: true,
+        id: true,
+        posts: true,
+        _count: {
+          select: {
+            posts: true
+          }
+        }
+      }
+    })
+    res.status(200).json(data);
+  }
+));
 
 
 
