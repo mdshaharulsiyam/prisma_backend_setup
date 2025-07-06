@@ -65,5 +65,61 @@ aggregateRouter.get('/aggregations/4', asyncWrapper(
     res.status(200).json(data);
   }
 ));
+// 5
+aggregateRouter.get('/aggregations/5', asyncWrapper(
+  async (req, res) => {
+    const data: any = await prisma.posts.findMany({
+      select: {
+        title: true,
+        likes: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          }
+        },
+        _count: {
+          select: {
+            likes: true
+          }
+        }
+      }
+    })
+    res.status(200).json(data);
+  }
+));
+// 6
+aggregateRouter.get('/aggregations/5', asyncWrapper(
+  async (req, res) => {
+    const data: any = await prisma.posts.findMany({
+      select: {
+        title: true,
+        likes: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          }
+        },
+        _count: {
+          select: {
+            likes: true
+          }
+        }
+      }
+    })
+    res.status(200).json(data);
+  }
+));
+
+
 
 export default aggregateRouter;
