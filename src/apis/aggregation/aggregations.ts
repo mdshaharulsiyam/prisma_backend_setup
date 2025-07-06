@@ -38,17 +38,30 @@ aggregateRouter.get('/aggregations/2', asyncWrapper(
     const data: any = await prisma.$queryRaw`
     SELECT COUNT(*)::INT AS total_posts, u.name AS user_name  FROM "Posts" s INNER JOIN "Users" u ON s.user_id = u.id GROUP BY u.id
     `
-    console.log(data)
     res.status(200).json(data);
   }
 ));
 // 3
 aggregateRouter.get('/aggregations/3', asyncWrapper(
   async (req, res) => {
-    const data: any = await prisma.$queryRaw`
-    SELECT COUNT(*)::INT AS total_posts, u.name AS user_name  FROM "Posts" s INNER JOIN "Users" u ON s.user_id = u.id GROUP BY u.id
-    `
-    console.log(data)
+    const data: any = await prisma.comments.count()
+    res.status(200).json(data);
+  }
+));
+// 4
+aggregateRouter.get('/aggregations/4', asyncWrapper(
+  async (req, res) => {
+    const data: any = await prisma.categories.findMany({
+      select: {
+        name: true,
+        posts: true,
+        _count: {
+          select: {
+            posts: true
+          }
+        }
+      }
+    })
     res.status(200).json(data);
   }
 ));
