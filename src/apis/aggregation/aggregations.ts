@@ -261,6 +261,99 @@ aggregateRouter.get('/aggregations/16', asyncWrapper(
     res.status(200).json(data);
   }
 ));
+// 17
+aggregateRouter.get('/aggregations/17', asyncWrapper(
+  async (req, res) => {
+    const data = await prisma.posts.findMany({
+      where: {
+        likes: {
+          some: {}
+        },
+        comments: {
+          some: {}
+        }
+      },
+      include: {
+        likes: true,
+        comments: true,
+        user: true,
+        category: true,
+      }
+    })
+
+    res.status(200).json(data);
+  }
+));
+// 18
+aggregateRouter.get('/aggregations/18', asyncWrapper(
+  async (req, res) => {
+    const data = await prisma.$queryRaw`SELECT
+    u.id AS user_id,
+    u.name,
+    COUNT(DISTINCT p.category_id)::INT AS category_count
+  FROM "Users" u
+  JOIN "Posts" p ON u.id = p.user_id
+  GROUP BY u.id, u.name
+  HAVING COUNT(DISTINCT p.category_id) > 1;`
+    res.status(200).json(data);
+  }
+));
+// 20
+aggregateRouter.get('/aggregations/20', asyncWrapper(
+  async (req, res) => {
+    const data = await prisma.$queryRaw`
+  SELECT
+    u.id AS user_id,
+    u.name,
+    COUNT(l.id)::INT AS total_likes
+  FROM "Users" u
+  JOIN "Posts" p ON u.id = p.user_id
+  JOIN "Likes" l ON p.id = l.post_id
+  GROUP BY u.id, u.name
+  HAVING COUNT(l.id) > 2;
+`;
+    res.status(200).json(data);
+  }
+));
+// 21
+aggregateRouter.get('/aggregations/21', asyncWrapper(
+  async (req, res) => {
+    const data = await prisma.$queryRaw`
+  SELECT
+    u.id AS user_id,
+    u.name,
+    COUNT(l.id)::INT AS total_likes
+  FROM "Users" u
+  JOIN "Posts" p ON u.id = p.user_id
+  JOIN "Likes" l ON p.id = l.post_id
+  GROUP BY u.id, u.name
+  HAVING COUNT(l.id) > 2;
+`;
+    res.status(200).json(data);
+  }
+));
+// 22
+aggregateRouter.get('/aggregations/22', asyncWrapper(
+  async (req, res) => {
+    const data = await prisma.$queryRaw`
+  SELECT 
+    u.id AS user_id,
+    u.name,
+    COUNT(DISTINCT p.id)::INT AS post_count,
+    COUNT(DISTINCT c.id)::INT AS comment_count,
+    COUNT(DISTINCT l.id)::INT AS likes_given,
+    (COUNT(DISTINCT p.id)::INT + COUNT(DISTINCT c.id)::INT + COUNT(DISTINCT l.id))::INT AS total_activity
+  FROM "Users" u
+  LEFT JOIN "Posts" p ON u.id = p.user_id
+  LEFT JOIN "Comments" c ON u.id = c.user_id
+  LEFT JOIN "Likes" l ON u.id = l.user_id
+  GROUP BY u.id, u.name
+  ORDER BY total_activity DESC
+  LIMIT 1;
+`;
+    res.status(200).json(data);
+  }
+));
 
 
 
