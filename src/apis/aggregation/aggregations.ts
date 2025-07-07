@@ -209,7 +209,7 @@ aggregateRouter.get('/aggregations/13', asyncWrapper(
     res.status(200).json(data);
   }
 ));
-// 13
+// 14
 aggregateRouter.get('/aggregations/14', asyncWrapper(
   async (req, res) => {
 
@@ -217,6 +217,33 @@ aggregateRouter.get('/aggregations/14', asyncWrapper(
     res.status(200).json(data);
   }
 ));
+// 15
+aggregateRouter.get('/aggregations/15', asyncWrapper(
+  async (req, res) => {
+    const data = await prisma.postTag.groupBy({
+      by: ['tag_id'],
+      _count: {
+        post_id: true,
+      },
+    });
+
+    // const result = await Promise.all(
+    //   data.map(async (item) => {
+    //     const tag = await prisma.tags.findUnique({
+    //       where: { id: item.tag_id },
+    //     });
+    //     return {
+    //       tag_id: item.tag_id,
+    //       tag_name: tag?.name || 'Unknown',
+    //       post_count: item._count.post_id,
+    //     };
+    //   })
+    // );
+
+    res.status(200).json(data);
+  }
+));
+
 
 
 
