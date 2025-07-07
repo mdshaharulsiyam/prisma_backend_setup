@@ -243,7 +243,24 @@ aggregateRouter.get('/aggregations/15', asyncWrapper(
     res.status(200).json(data);
   }
 ));
+// 16
+aggregateRouter.get('/aggregations/16', asyncWrapper(
+  async (req, res) => {
+    const data = await prisma.users.findMany({
+      select: {
+        name: true,
+        id: true,
+        _count: {
+          select: {
+            like: true
+          }
+        }
+      }
+    })
 
+    res.status(200).json(data);
+  }
+));
 
 
 
